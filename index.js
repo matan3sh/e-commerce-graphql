@@ -23,6 +23,7 @@ const typeDefs = gql`
   type Category {
     id: ID!
     name: String!
+    products: [Product!]!
   }
 `;
 
@@ -34,6 +35,11 @@ const resolvers = {
     categories: () => categories,
     category: (parent, { id }, context) =>
       categories.find((category) => category.id === id),
+  },
+
+  Category: {
+    products: ({ id }, args, context) =>
+      products.filter((product) => product.categoryId === id),
   },
 };
 
