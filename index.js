@@ -1,57 +1,17 @@
-const { ApolloServer, gql } = require("apollo-server");
+const { ApolloServer } = require("apollo-server");
+const { typeDefs } = require("./schema");
 
-const { products, categories } = require("./data");
-
-const typeDefs = gql`
-  type Query {
-    products: [Product!]!
-    product(id: ID!): Product
-    categories: [Category!]!
-    category(id: ID!): Category
-  }
-
-  type Product {
-    id: ID!
-    name: String!
-    description: String!
-    image: String!
-    quantity: Int!
-    price: Float!
-    onSale: Boolean!
-    category: Category
-  }
-
-  type Category {
-    id: ID!
-    name: String!
-    products: [Product!]!
-  }
-`;
-
-const resolvers = {
-  Query: {
-    products: () => products,
-    product: (parent, { id }, context) =>
-      products.find((product) => product.id === id),
-    categories: () => categories,
-    category: (parent, { id }, context) =>
-      categories.find((category) => category.id === id),
-  },
-
-  Category: {
-    products: ({ id }, args, context) =>
-      products.filter((product) => product.categoryId === id),
-  },
-
-  Product: {
-    category: ({ categoryId }, args, context) =>
-      categories.find((category) => category.id === categoryId),
-  },
-};
+const { Query } = require("./resolvers/Query");
+const { Product } = require("./resolvers/Product");
+const { Category } = require("./resolvers/Category");
 
 const server = new ApolloServer({
   typeDefs,
-  resolvers,
+  resolvers: {
+    Query,
+    Category,
+    Product,
+  },
 });
 
 server.listen().then(({ url }) => console.log("Server is ready at " + url));
