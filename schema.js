@@ -64,6 +64,6 @@ exports.typeDefs = gql`
     title: String!
     comment: String!
     rating: Int!
-    productId: Int!
+    productId: String!
   }
 `;
