@@ -1,12 +1,13 @@
 exports.Category = {
-  products: ({ id }, { filter }, { products }) => {
-    const categoryProducts = products.filter(
+  products: ({ id }, { filter }, { db }) => {
+    const categoryProducts = db.products.filter(
       (product) => product.categoryId === id
     );
     let filteredCategoryProducts = categoryProducts;
 
     if (filter) {
-      if (filter.onSale) {
+      const { onSale } = filter;
+      if (onSale) {
         filteredCategoryProducts = filteredCategoryProducts.filter(
           (product) => product.onSale
         );
